@@ -1,7 +1,7 @@
 {
   "name": "fortnite-lobby-bot",
   "version": "1.0.0",
-  "description": "JavaScript Fortnite Bot",
+  "description": "Lobby bot using fnbr",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
