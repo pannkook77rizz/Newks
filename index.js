@@ -1,6 +1,6 @@
 const { Client } = require('fnbr');
 
-// We use process.env so you don't have to show your secret code on GitHub
+// Render will provide this from the Environment tab
 const AUTH_CODE = process.env.AUTH_CODE;
 
 const client = new Client({
@@ -8,7 +8,13 @@ const client = new Client({
 });
 
 client.on('ready', () => {
-    console.log(`Bot is online: ${client.user.displayName}`);
+    console.log(`[SUCCESS] Bot online: ${client.user.self.displayName}`);
+    
+    // --- YOUR CUSTOM STATUS ---
+    client.setStatus("Playing with Fans! | !skin"); 
+    
+    // Set a default skin (Aura)
+    client.party.me.setOutfit('CID_441_Athena_Commando_F_MasterMind'); 
 });
 
 // Auto-accept friends
@@ -20,20 +26,23 @@ client.on('friend:request', async (request) => {
 // Auto-join parties
 client.on('party:invite', async (invite) => {
     await invite.accept();
-    console.log(`Joined party!`);
+    console.log(`Joined a party!`);
 });
 
-// Party Commands
+// Party commands
 client.on('party:message', async (message) => {
-    const content = message.content.toLowerCase();
-    
-    if (content.startsWith('!skin ')) {
-        const skinId = content.replace('!skin ', '').trim();
+    const msg = message.content.toLowerCase();
+
+    // Change Skin (!skin CID_ID)
+    if (msg.startsWith('!skin ')) {
+        const skinId = msg.replace('!skin ', '').trim();
         await client.party.me.setOutfit(skinId);
+        await message.reply(`Skin set to ${skinId}`);
     }
-    
-    if (content === '!ready') await client.party.me.setReady(true);
-    if (content === '!unready') await client.party.me.setReady(false);
+
+    // Ready/Unready
+    if (msg === '!ready') await client.party.me.setReady(true);
+    if (msg === '!unready') await client.party.me.setReady(false);
 });
 
 client.login();
